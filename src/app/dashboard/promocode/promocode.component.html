@@ -1,0 +1,94 @@
+<mat-card class="example-card">
+    <mat-card-title>Promotion Code</mat-card-title>
+    <mat-divider inset></mat-divider>
+    <mat-card-subtitle>
+        <span class="subtitle-heading">
+            Search Promotion
+        </span>
+        <div class="filter-section">
+            <div class="filter-form">
+                <form [formGroup]="promocodeForm" class="">
+                    <mat-form-field [floatLabel]="'never'" appearance="outline">
+                        <input formControlName="promocodeName" id="promocodeName" matInput placeholder="Promo code"
+                            type="text">
+                    </mat-form-field>
+
+                    <mat-form-field [floatLabel]="'never'" appearance="outline">
+                        <mat-select formControlName="promocodeStatus" placeholder="Status" [disableRipple]="true">
+                            <mat-option *ngFor="let status of statusList" [value]="status">
+                                {{status}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <button (click)="resetFilter()" [disableRipple]="true" mat-raised-button class="reset-btn">
+                        Reset Filter
+                    </button>
+                </form>
+            </div>
+            <div class="add-btn">
+                <button (click)="openPromotionDialog(null)" [disableRipple]="true" mat-raised-button>
+                    <mat-icon>add</mat-icon>
+                    Create Promotion
+                </button>
+            </div>
+        </div>
+    </mat-card-subtitle>
+    <mat-card-content>
+        <table mat-table [dataSource]="dataSource" *ngIf="pagiPayload.totalCount > 0">
+
+            <ng-container matColumnDef="promocodeName">
+                <th mat-header-cell *matHeaderCellDef> Promotion code </th>
+                <td mat-cell *matCellDef="let element"> {{element.promocodeName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="promocodeDiscount">
+                <th mat-header-cell *matHeaderCellDef> Discount </th>
+                <td mat-cell *matCellDef="let element"> {{element.promocodeDiscount}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="promocodeStatus">
+                <th mat-header-cell *matHeaderCellDef> Status </th>
+                <td mat-cell *matCellDef="let element"> {{element.promocodeStatus}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="promocodeType">
+                <th mat-header-cell *matHeaderCellDef> Type of promotion </th>
+                <td mat-cell *matCellDef="let element"> {{element.promocodeType}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="promocodeStartDate">
+                <th mat-header-cell *matHeaderCellDef> Start date </th>
+                <td mat-cell *matCellDef="let element"> {{element.promocodeStartDate | date: 'MM/dd/YYYY'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="promocodeEndDate">
+                <th mat-header-cell *matHeaderCellDef> End date </th>
+                <td mat-cell *matCellDef="let element"> {{element.promocodeEndDate | date: 'MM/dd/YYYY'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-icon [matMenuTriggerFor]="menu" style="cursor: pointer;">more_vert</mat-icon>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="deletePromocodeData(element)">Delete</button>
+                        <button mat-menu-item (click)="openPromotionDialog(element)">Edit</button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <div *ngIf="pagiPayload.totalCount == 0" class="no-record-found">
+            <span>No record found</span>
+        </div>
+    </mat-card-content>
+    <mat-card-actions>
+        <mat-paginator [length]="pagiPayload.totalCount" [pageSize]="pagiPayload.pageSize"
+            [pageSizeOptions]="[5, 10, 25, 100]" [pageIndex]=pagiPayload.pageIndex (page)="getServerData($event)"
+            aria-label="Select page">
+        </mat-paginator>
+    </mat-card-actions>
+</mat-card>

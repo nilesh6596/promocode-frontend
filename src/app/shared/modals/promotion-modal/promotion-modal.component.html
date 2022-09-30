@@ -1,0 +1,58 @@
+<h2 mat-dialog-title>Add Promotion</h2>
+<mat-dialog-content>
+    <form [formGroup]="promocodeForm">
+
+        <div class="sections">
+            <mat-form-field [floatLabel]="'never'" appearance="fill">
+                <input formControlName="promocodeName" id="promocodeName" matInput placeholder="Enter Promotion Code"
+                    type="text" required>
+            </mat-form-field>
+
+            <mat-form-field [floatLabel]="'never'" appearance="fill">
+                <input formControlName="promocodeDiscount" id="promocodeDiscount" matInput
+                    placeholder="Enter Promotion Discount" type="text" required>
+            </mat-form-field>
+        </div>
+
+        <div class="sections">
+            <mat-form-field [floatLabel]="'never'" appearance="fill">
+                <mat-select formControlName="promocodeStatus" placeholder="Select Promotion Status"
+                    [disableRipple]="true" required>
+                    <mat-option *ngFor="let status of statusList" [value]="status">
+                        {{status}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field [floatLabel]="'never'" appearance="fill">
+                <mat-select formControlName="promocodeType" placeholder="Select Promotion Type" [disableRipple]="true"
+                    required>
+                    <mat-option *ngFor="let type of typeList" [value]="type">
+                        {{type}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="sections">
+            <mat-form-field [floatLabel]="'never'" appearance="fill">
+                <input matInput [matDatepicker]="startDatePicker" formControlName="promocodeStartDate"
+                    placeholder="Select Start Date" required readonly>
+                <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #startDatePicker (click)="startDatePicker.open()"></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field [floatLabel]="'never'" appearance="fill">
+                <input matInput [matDatepicker]="endDatePicker" formControlName="promocodeEndDate"
+                    placeholder="Select End Date" readonly required>
+                <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #endDatePicker (click)="endDatePicker.open()">
+                </mat-datepicker>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="closeDialog()">Cancel</button>
+    <button mat-button (click)="submitPromocodeData()">Submit</button>
+</mat-dialog-actions>
