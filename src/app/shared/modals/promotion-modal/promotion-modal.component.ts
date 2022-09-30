@@ -13,6 +13,7 @@ import {
 } from '@angular/material/snack-bar';
 import { PromocodeService } from '../../services/promocode.service';
 import { StatusList, TypeList } from '../../utility/constant';
+import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-promotion-modal',
@@ -29,6 +30,8 @@ export class PromotionModalComponent implements OnInit {
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   isEdit = false;
   promocodeId = null;
+  startDate = new Date();
+  endDate = new Date();
 
   constructor(
     private authService: PromocodeService,
@@ -42,6 +45,19 @@ export class PromotionModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.promocodeForm.controls.promocodeStartDate.valueChanges
+      .pipe(
+        debounceTime(2000),
+        distinctUntilChanged(),
+        tap(() => {
+          this.endDate = new Date(this.promocodeForm.value.promocodeStartDate)
+          if (new Date(this.startDate) > this.promocodeForm.value.promocodeEndDate ? new Date(this.promocodeForm.value.promocodeEndDate) : new Date()) {
+            this.promocodeForm.controls.promocodeEndDate.patchValue('');
+          }
+        })
+      )
+      .subscribe();
     if (this.isEdit) {
       this.promocodeId = this.data.promocodeId;
       this.promocodeForm.controls.promocodeName.patchValue(this.data.promocodeName)
@@ -50,6 +66,8 @@ export class PromotionModalComponent implements OnInit {
       this.promocodeForm.controls.promocodeType.patchValue(this.data.promocodeType)
       this.promocodeForm.controls.promocodeStartDate.patchValue(new Date(this.data.promocodeStartDate))
       this.promocodeForm.controls.promocodeEndDate.patchValue(new Date(this.data.promocodeEndDate))
+      this.startDate = new Date(this.data.promocodeStartDate)
+      this.endDate = new Date(this.data.promocodeStartDate)
     }
   }
 

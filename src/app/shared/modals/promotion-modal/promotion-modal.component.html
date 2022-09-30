@@ -37,14 +37,14 @@
         <div class="sections">
             <mat-form-field [floatLabel]="'never'" appearance="fill">
                 <input matInput [matDatepicker]="startDatePicker" formControlName="promocodeStartDate"
-                    placeholder="Select Start Date" required readonly>
+                    placeholder="Select Start Date" required readonly [min]="startDate">
                 <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
                 <mat-datepicker #startDatePicker (click)="startDatePicker.open()"></mat-datepicker>
             </mat-form-field>
 
             <mat-form-field [floatLabel]="'never'" appearance="fill">
                 <input matInput [matDatepicker]="endDatePicker" formControlName="promocodeEndDate"
-                    placeholder="Select End Date" readonly required>
+                    placeholder="Select End Date" readonly required [min]="endDate">
                 <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
                 <mat-datepicker #endDatePicker (click)="endDatePicker.open()">
                 </mat-datepicker>
