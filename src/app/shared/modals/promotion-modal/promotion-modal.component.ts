@@ -42,23 +42,8 @@ export class PromotionModalComponent implements OnInit {
   ) {
     this.promocodeForm = this.authService.initPromocodeForm();
     this.isEdit = this.data.isEdit;
-  }
-
-  ngOnInit(): void {
-
-    this.promocodeForm.controls.promocodeStartDate.valueChanges
-      .pipe(
-        debounceTime(2000),
-        distinctUntilChanged(),
-        tap(() => {
-          this.endDate = new Date(this.promocodeForm.value.promocodeStartDate)
-          if (new Date(this.startDate) > this.promocodeForm.value.promocodeEndDate ? new Date(this.promocodeForm.value.promocodeEndDate) : new Date()) {
-            this.promocodeForm.controls.promocodeEndDate.patchValue('');
-          }
-        })
-      )
-      .subscribe();
     if (this.isEdit) {
+      console.log(this.data)
       this.promocodeId = this.data.promocodeId;
       this.promocodeForm.controls.promocodeName.patchValue(this.data.promocodeName)
       this.promocodeForm.controls.promocodeDiscount.patchValue(this.data.promocodeDiscount)
@@ -69,6 +54,21 @@ export class PromotionModalComponent implements OnInit {
       this.startDate = new Date(this.data.promocodeStartDate)
       this.endDate = new Date(this.data.promocodeStartDate)
     }
+  }
+
+  ngOnInit(): void {
+
+    this.promocodeForm.controls.promocodeStartDate.valueChanges
+      .pipe(
+        debounceTime(2000),
+        distinctUntilChanged(),
+        tap(() => {
+          if (new Date(this.promocodeForm.value.promocodeStartDate).getTime() > new Date(this.promocodeForm.value.promocodeEndDate).getTime() ? new Date(this.promocodeForm.value.promocodeEndDate) : new Date()) {
+            this.promocodeForm.controls.promocodeEndDate.patchValue('');
+          }
+        })
+      )
+      .subscribe();
   }
 
   closeDialog() {
@@ -93,10 +93,10 @@ export class PromotionModalComponent implements OnInit {
       promocodeData['oldPromocodeName'] = this.data.promocodeName || null;
       this.authService.updatePromocodeAPIFn(promocodeData).subscribe(
         (response) => {
-          if (response && !response.response_error && response.data.promocodeData && response.data.promocodeData.length) {
+          if (response && !response.response_error && response.data.length) {
             this.openSnackBar(response.status_message);
             this._dialogRef.close(true);
-          } else {
+          } else if (response && response.response_error) {
             this.openSnackBar(response.status_message, true);
           }
         },
@@ -107,10 +107,10 @@ export class PromotionModalComponent implements OnInit {
     } else {
       this.authService.addPromocodeAPIFn(promocodeData).subscribe(
         (response) => {
-          if (response && !response.response_error && response.data.promocodeData && response.data.promocodeData.length) {
+          if (response && !response.response_error && response.data.length) {
             this.openSnackBar(response.status_message);
-            this._dialogRef.close();
-          } else {
+            this._dialogRef.close(true);
+          } else if (response && response.response_error) {
             this.openSnackBar(response.status_message, true);
           }
         },

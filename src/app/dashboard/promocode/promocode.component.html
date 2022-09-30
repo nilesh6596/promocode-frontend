@@ -87,7 +87,7 @@
     </mat-card-content>
     <mat-card-actions>
         <mat-paginator [length]="pagiPayload.totalCount" [pageSize]="pagiPayload.pageSize"
-            [pageSizeOptions]="[5, 10, 25, 100]" [pageIndex]=pagiPayload.pageIndex (page)="getServerData($event)"
+            [pageSizeOptions]="[1, 5, 10, 25, 100]" [pageIndex]=pagiPayload.pageIndex (page)="getServerData($event)"
             aria-label="Select page">
         </mat-paginator>
     </mat-card-actions>
